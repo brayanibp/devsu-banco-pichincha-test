@@ -5,18 +5,24 @@ import style from './product-list.module.css';
 import { EmptyView } from '../empty-view';
 import { ProductListSkeleton } from './product-list-skeleton';
 import RecordsLimit from '../records-limit';
-import ProductsFilter from '../products-filter';
+import { ChangeEvent, useState } from "react";
 
 export default function ProductList() {
-  const { productList, records } = useProductList();
+  const { productList, records, applyFilter } = useProductList();
+  
   const productsCards = productList?.map((item)=>{
     return <ProductItem key={item?.id || 'not-defined'} { ...(item || {}) } />;
   });
-  
+
+  const handleTyping = (event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.value;
+    applyFilter(value);
+  }
+
   return (
     <>
       <div style={{ marginBottom: 30, width: '100%', maxWidth: 1280 }}>
-        <ProductsFilter  />
+        <input className={style.search} type="text" onChange={(event) => handleTyping(event)} placeholder="Search..." />
       </div>
       {
         !productList ? <ProductListSkeleton />

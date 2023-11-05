@@ -1,3 +1,8 @@
+.table-wrapper {
+  background: #ffffff;
+  padding: 20px;
+}
+
 .table {
   background: #ffffff;
   border-collapse: collapse;

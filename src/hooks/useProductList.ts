@@ -14,6 +14,7 @@ export function useProductList () {
       });
   }, []);
   return {
-    productList
+    productList,
+    records: productList.length
   }
 }

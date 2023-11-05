@@ -1,0 +1,32 @@
+.nav {
+  padding: 20px 0;
+  display: flex;
+  justify-content: center;
+  background: #ffffff;
+}
+.nav div {
+  display: flex;
+  flex-wrap: nowrap;
+  color: #17275A;
+  font-weight: bolder;
+  font-size: 1.7em;
+  align-items: center;
+  justify-content: center;
+}
+.nav .box {
+  background: yellow;
+  margin: 0 10px;
+  padding: 10px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  height: 30px;
+  width: 30px;
+  border-radius: 0 0 0 15px;
+}
+.nav .edge {
+  border-top: 6px solid #17275A;
+  border-right: 6px solid #17275A;
+  height: 10px;
+  width: 10px;
+}

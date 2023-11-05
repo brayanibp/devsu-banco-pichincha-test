@@ -1,23 +1,17 @@
-.container {
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
+.row {
+  border-bottom: 1px solid #EDEFF5;
 }
-
 .col {
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+  padding: 10px 25px;
 }
 
 .logo {
   margin: 0;
   padding: 0;
-  height: 40px;
-  width: 40px;
+  height: 50px;
+  width: 50px;
   display: flex;
-  background: #ccc;
+  background: #C0C7D9;
   border-radius: 50%;
   overflow: hidden;
 }

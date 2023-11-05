@@ -3,17 +3,19 @@ import styles from './product-item.module.css';
 import Image from 'next/image';
 
 export default function ProductItem({ logo, name, description, date_release, date_revision }: Product) {
+  console.log(logo);
   return (
-    <tr className={styles.container}>
+    <tr className={styles.row}>
       <td className={styles.col}>
         <figure className={styles.logo}>
-          { logo && <Image src='' alt='Logo' width={40} height={40} /> }
+          { logo && <Image src={ ("/assets/dummy_60x60_C0C7D9_C0C7D9.png") } alt='Product Logo' width={50} height={50} /> }
         </figure>
       </td>
       <td className={styles.col}>{name}</td>
       <td className={styles.col}>{description}</td>
-      <td className={styles.col}>{date_release.toISOString()}</td>
-      <td className={styles.col}>{date_revision.toISOString()}</td>
+      <td className={styles.col}>{date_release}</td>
+      <td className={styles.col}>{date_revision}</td>
+      <td className={styles.col}><Image src="/assets/menu.png" alt="menu" width={24} height={24} /></td>
     </tr>
   );
 }

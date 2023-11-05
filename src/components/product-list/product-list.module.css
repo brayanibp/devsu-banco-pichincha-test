@@ -1,0 +1,17 @@
+.table {
+  background: #ffffff;
+  border-collapse: collapse;
+}
+
+.table .header tr {
+  background: #F9FAFC;
+  height: 70px;
+  border-bottom: 1px solid #EDEFF5;
+}
+
+.table .header th {
+  margin: 0;
+  border: 0;
+  background: #F9FAFC;
+  padding: 10px 20px;
+}

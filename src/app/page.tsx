@@ -1,6 +1,5 @@
-import ProductItem from '@/components/product-item';
+'use client';
 import styles from './page.module.css';
-import ProductItemSkeleton from '@/components/product-item/product-item-skeleton';
 import ProductList from '@/components/product-list';
 
 export default function Home() {

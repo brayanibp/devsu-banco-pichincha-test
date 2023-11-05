@@ -3,7 +3,7 @@ import { fetchProducts } from '@/services/products-service';
 import { useEffect, useState } from 'react';
 
 export function useProductList () {
-  const [productList, setProductList] = useState<Product[]>([]);
+  const [productList, setProductList] = useState<Product[] | null>(null);
   useEffect(() => {
     fetchProducts()
       .then((res) => {
@@ -15,6 +15,6 @@ export function useProductList () {
   }, []);
   return {
     productList,
-    records: productList.length
+    records: productList?.length || 0
   }
 }

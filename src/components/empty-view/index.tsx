@@ -1,3 +1,9 @@
+import style from './empty-view.module.css';
+
 export function EmptyView() {
-  return <h1>Opps it seems a litte empty</h1>
+  return (
+    <div className={style.empty_container}>
+      <h2>Opps parece que está algo vacio...</h2>
+    </div>
+  );
 }

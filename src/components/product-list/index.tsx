@@ -5,18 +5,21 @@ import style from './product-list.module.css';
 import { EmptyView } from '../empty-view';
 import { ProductListSkeleton } from './product-list-skeleton';
 import RecordsLimit from '../records-limit';
+import ProductsFilter from '../products-filter';
 
 export default function ProductList() {
   const { productList, records } = useProductList();
-  
   const productsCards = productList?.map((item)=>{
     return <ProductItem key={item?.id || 'not-defined'} { ...(item || {}) } />;
   });
   
   return (
     <>
+      <div style={{ marginBottom: 30, width: '100%', maxWidth: 1280 }}>
+        <ProductsFilter  />
+      </div>
       {
-        !productsCards.length ? <ProductListSkeleton />
+        !productList ? <ProductListSkeleton />
         : (
           <div className={style['table-wrapper']}>
             <table className={style.table}>
@@ -31,9 +34,10 @@ export default function ProductList() {
                 </tr>
               </thead>
               <tbody>
-                { productsCards  }
+                { productList && productsCards?.length ? productsCards : <tr></tr> }
               </tbody>
             </table>
+            {productList && !productsCards?.length && (<EmptyView />) }
             <div style={{ padding: '40px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <strong>{records} Resultados</strong>
               <RecordsLimit></RecordsLimit>

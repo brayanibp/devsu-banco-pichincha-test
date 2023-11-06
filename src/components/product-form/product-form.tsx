@@ -1,5 +1,5 @@
 'use client';
-import { FormEvent } from "react";
+import { ChangeEvent, FormEvent } from "react";
 import style from './product-form.module.css';
 import { createProduct, updateProduct } from "@/services/products-service";
 import { IProduct } from "@/models/product-model";
@@ -8,13 +8,13 @@ interface IFormValues extends IProduct {
   [key: string]: string
 }
 
-export function ProductForm ({ action }: { action: 'create' | 'update' }) {
+export function ProductForm ({ title, action, product }: { title: string, action: 'create' | 'update', product?: IProduct }) {
   const onSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
     const form = ev.currentTarget as HTMLFormElement;
     console.log(form);
     const formData = new FormData(form);
-    let product: IFormValues = {
+    let productForm: IFormValues = {
       id: '',
       name: '',
       description: '',
@@ -23,49 +23,66 @@ export function ProductForm ({ action }: { action: 'create' | 'update' }) {
       date_revision: ''
     };
     formData.forEach((value: FormDataEntryValue, key) => {
-      product[key] = value.toString();
+      productForm[key] = value.toString();
     });
-    product.date_release = `${product.date_release}T00:00:00.000+00:00`;
-    product.date_revision = `${product.date_revision}T00:00:00.000+00:00`;
+    productForm.date_release = `${productForm.date_release}T00:00:00.000+00:00`;
+    productForm.date_revision = `${getNewRevisionDate(productForm.date_release)}T00:00:00.000+00:00`;
     if (action === 'create') {
-      const productResponse = await createProduct(product);
+      const productResponse = await createProduct(productForm);
       return;
     }
-    const productResponse = await updateProduct(product);
+    productForm.id = product?.id || '';
+    const productResponse = await updateProduct(productForm);
   }
+
+  const getNewRevisionDate = (dateString: string) => {
+    const [year, month, day] = dateString.split('-').map(val => parseInt(val));
+    const millisecondsDate = new Date(year+1, month - 1, day);
+    const [rYear, rMonth, rDay] = millisecondsDate.toISOString().split('T')[0].split('-');
+    return `${+rYear}-${rMonth}-${rDay}`;
+  }
+
+  const handleDateSelection = (event: ChangeEvent<HTMLInputElement>) => {
+    const dateString = event.currentTarget.value;
+    const $releaseDate = document.querySelector('#date_revision') as HTMLInputElement;
+    $releaseDate.value = getNewRevisionDate(dateString);
+  }
+
   return <form className={style.form} onSubmit={(event: FormEvent)=>onSubmit(event)}>
     <div className={style.header}>
-      <h1>Formulario de Registro</h1>
+      <h1>
+        { title }
+      </h1>
     </div>
     <div className={style.body}>
       <div className={style.row}>
         <div className={style.col}>
           <label htmlFor="id">ID</label>
-          <input type="text" name="id" id="id" />
+          <input type="text" name="id" id="id" defaultValue={product?.id} disabled={action==='update'} />
         </div>
         <div className={style.col}>
           <label htmlFor="name">Nombre</label>
-          <input type="text" name="name" id="name" />
+          <input type="text" name="name" id="name" defaultValue={product?.name} />
         </div>
       </div>
       <div className={style.row}>
         <div className={style.col}>
           <label htmlFor="description">Descripción</label>
-          <input type="text" name="description" id="description" />
+          <input type="text" name="description" id="description" defaultValue={product?.description} />
         </div>
         <div className={style.col}>
           <label htmlFor="logo">Logo</label>
-          <input type="text" name="logo" id="logo" />
+          <input type="text" name="logo" id="logo" defaultValue={product?.logo} />
         </div>
       </div>
       <div className={style.row}>
         <div className={style.col}>
           <label htmlFor="date_release">Fecha Liberación</label>
-          <input type="date" name="date_release" id="date_release" />
+          <input onChange={(event)=>handleDateSelection(event)} type="date" name="date_release" id="date_release" defaultValue={product?.date_release.split('T')[0]} />
         </div>
         <div className={style.col}>
           <label htmlFor="date_revision">Fecha Revisión</label>
-          <input type="date" name="date_revision" id="date_revision" />
+          <input type="date" name="date_revision" id="date_revision" defaultValue={product?.date_revision.split('T')[0]} disabled />
         </div>
       </div>
     </div>

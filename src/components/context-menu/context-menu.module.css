@@ -1,7 +1,7 @@
 .menu {
   position: absolute;
-  top: -35px;
-  right: 25px;
+  top: -50px;
+  right: 40px;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -16,12 +16,23 @@
   overflow: hidden;
 }
 
-.option {
+.option button {
   display: flexbox;
-  width: 100%;
-  padding: 5px 10px;
+  width: 100px;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  font-size: 1em;
+  text-align: start;
+  color: #444;
+  font-weight: 400;
+}
+
+.option:hover {
+  background: #bff3ff;
 }
 
 .option:nth-child(1) {
+  padding: 0;
   border-bottom: 1px solid #E2E4E7;
 }

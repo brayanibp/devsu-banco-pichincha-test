@@ -65,13 +65,12 @@ async function updateProduct(productData: IProduct) {
 
 async function deleteProduct(productData: IProduct) {
   try {
-    const result = await fetch(`${API_URL}/bp/products`, {
+    const result = await fetch(`${API_URL}/bp/products?id=${productData.id}`, {
       method: 'DELETE',
       headers: {
         "authorId": `${AUTHOR_ID}`,
         "content-type": "application/json"
-      },
-      body: JSON.stringify(productData)
+      }
     });
     if (result.status !== 200) throw await result.text();
     const product = await result.json();

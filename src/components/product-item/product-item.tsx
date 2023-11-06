@@ -5,8 +5,8 @@ import ContextMenu from '../context-menu/context-menu';
 import { useState } from 'react';
 
 export default function ProductItem({ id, logo, name, description, date_release, date_revision }: IProduct) {
-  const [contextMenuStatus, setContextMenuStatus] = useState('closed');
-  const openContextMenu = ({ id, logo, name, description, date_release, date_revision }: IProduct) => {
+  const [contextMenuStatus, setContextMenuStatus] = useState<'open' | 'closed'>('closed');
+  const toggleContextMenu = () => {
     setContextMenuStatus((prev: string)=> {
       if (prev === 'open') return 'closed';
       else return 'open';
@@ -24,8 +24,8 @@ export default function ProductItem({ id, logo, name, description, date_release,
       <td className={styles.col}>{date_release.split('T')[0]}</td>
       <td className={styles.col}>{date_revision.split('T')[0]}</td>
       <td className={styles.col}>
-        <ContextMenu product={{ id, logo, name, description, date_release, date_revision }} status={contextMenuStatus} />
-        <button className={styles.button} onClick={()=>openContextMenu({ id, logo, name, description, date_release, date_revision })}>
+        <ContextMenu toggleContextMenu={toggleContextMenu} product={{ id, logo, name, description, date_release, date_revision }} status={contextMenuStatus} />
+        <button className={styles.button} onClick={()=>toggleContextMenu()}>
           <Image src="/assets/menu.png" alt="menu" width={24} height={24} />
         </button>
       </td>

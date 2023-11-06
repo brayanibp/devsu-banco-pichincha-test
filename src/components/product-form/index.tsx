@@ -1,5 +1,6 @@
 'use client';
 import { FormEvent } from "react";
+import style from './product-form.module.css';
 
 interface IFormValues {
   [key: string]: string
@@ -21,43 +22,43 @@ export function ProductForm ({ action }: { action: 'create' | 'update' }) {
   const cleanForm = () => {
     return 0;
   }
-  return <form onSubmit={(event: FormEvent)=>onSubmit(event)}>
-    <div>
+  return <form className={style.form} onSubmit={(event: FormEvent)=>onSubmit(event)}>
+    <div className={style.header}>
       <h1>Formulario de Registro</h1>
     </div>
-    <div>
-      <div>
-        <div>
+    <div className={style.body}>
+      <div className={style.row}>
+        <div className={style.col}>
           <label htmlFor="id">ID</label>
           <input type="text" name="id" id="id" />
         </div>
-        <div>
+        <div className={style.col}>
           <label htmlFor="name">Nombre</label>
           <input type="text" name="name" id="name" />
         </div>
       </div>
-      <div>
-        <div>
+      <div className={style.row}>
+        <div className={style.col}>
           <label htmlFor="description">Descripción</label>
           <input type="text" name="description" id="description" />
         </div>
-        <div>
+        <div className={style.col}>
           <label htmlFor="logo">Logo</label>
           <input type="text" name="logo" id="logo" />
         </div>
       </div>
-      <div>
-        <div>
+      <div className={style.row}>
+        <div className={style.col}>
           <label htmlFor="date_release">Fecha Liberación</label>
-          <input type="text" name="date_release" id="date_release" />
+          <input type="date" name="date_release" id="date_release" />
         </div>
-        <div>
+        <div className={style.col}>
           <label htmlFor="date_revision">Fecha Revisión</label>
-          <input type="text" name="date_revision" id="date_revision" />
+          <input type="date" name="date_revision" id="date_revision" />
         </div>
       </div>
     </div>
-    <div>
+    <div className={style.bottom}>
       <button type="reset" onClick={()=>cleanForm}>Reiniciar</button>
       <button type="submit">Enviar</button>
     </div>

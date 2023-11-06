@@ -43,10 +43,14 @@
   font-size: 1em;
 }
 
-.list_footer {
+.footer {
   margin: 40px 0; 
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
+}
+
+.footer div {
   position: relative;
 }

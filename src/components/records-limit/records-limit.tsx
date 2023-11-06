@@ -1,13 +1,13 @@
 'use client';
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import style from "./records-limit.module.css";
 
-export default function RecordsLimit() {
+export default function RecordsLimit({ availableLimits, setPageLimit }: { availableLimits: number[], setPageLimit: Function }) {
   const [limit, setLimit] = useState(5);
-  const availableLimits = [5, 10, 20];
   const options = availableLimits.map((item, index) => {
     const handleClick = (value: number) => {
       setLimit(value);
+      setPageLimit(value);
     }
     return <li key={index} className={style.option} onClick={()=>handleClick(item)}>{item}</li>
   })

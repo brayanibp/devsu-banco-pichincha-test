@@ -1,5 +1,5 @@
 import styles from './page.module.css';
-import ProductList from '@/components/product-list';
+import ProductList from '@/components/product-list/product-list';
 
 export default function Products() {
   return (

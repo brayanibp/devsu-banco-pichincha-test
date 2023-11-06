@@ -1,0 +1,51 @@
+.paginator {
+  display: flex;
+  list-style: none;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+}
+
+.back button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background: #fff;
+  border: 1px solid #E2E4E7;
+  padding: 10px;
+  width: 35px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.back button span {
+  display: block;
+  border: 5px solid #ffffff00;
+  border-right: 5px solid #000;
+  height: 0;
+  width: 0;
+}
+
+.next button {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: #fff;
+  border: 1px solid #E2E4E7;
+  padding: 10px;
+  width: 35px;
+  height: 30px;
+  border-radius: 10px;
+}
+
+.next button span {
+  display: block;
+  border: 5px solid #ffffff00;
+  border-left: 5px solid #000;
+  height: 0;
+  width: 0;
+}
+
+.page {
+  font-weight: bold;
+}

@@ -19,6 +19,8 @@
   border: 0;
   background: #F9FAFC;
   padding: 10px 20px;
+  min-width: max-content;
+  text-align: left;
 }
 
 .search {

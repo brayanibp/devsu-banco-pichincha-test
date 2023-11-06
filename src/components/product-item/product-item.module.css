@@ -1,5 +1,6 @@
 .row {
   border-bottom: 1px solid #EDEFF5;
+  position: relative;
 }
 .col {
   padding: 10px 25px;
@@ -14,4 +15,9 @@
   background: #C0C7D9;
   border-radius: 50%;
   overflow: hidden;
+}
+
+.button {
+  background: none;
+  border: none;
 }

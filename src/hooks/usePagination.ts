@@ -26,8 +26,10 @@ export default function usePagination({ productList }: { productList: IProduct[]
           totalRecords: productList?.length || 0,
           totalPages: Math.ceil((productList?.length || 0) / hitsPeerPage),
           hits: [
-            ...(productList?.slice(prev.fromIndex, hitsPeerPage) || [])
-          ]
+            ...(productList?.slice(0, hitsPeerPage) || [])
+          ],
+          page: 1,
+          fromIndex: 0
         }
       });
     }, 0);

@@ -13,6 +13,7 @@
   min-width: 65px;
   width: fit-content;
   overflow: hidden;
+  background: #ffffff;
 }
 
 .arrow {

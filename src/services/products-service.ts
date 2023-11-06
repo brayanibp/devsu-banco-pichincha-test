@@ -1,7 +1,7 @@
 import { API_URL, AUTHOR_ID } from "@/consts/consts";
-import { Product } from "@/models/product-model";
+import { IProduct } from "@/models/product-model";
 
-async function fetchProducts(): Promise<Product[]> {
+async function fetchProducts(): Promise<IProduct[]> {
   const result = await fetch(`${API_URL}/bp/products`, {
     headers: {
       authorId: '500'
@@ -11,10 +11,10 @@ async function fetchProducts(): Promise<Product[]> {
   return products;
 }
 
-async function createProduct(): Promise<Product[]> {
+async function createProduct(): Promise<IProduct[]> {
   const productId = crypto.randomUUID();
   const releaseDate = new Date().toISOString();
-  const newProduct: Product = {
+  const newProduct: IProduct = {
     id: productId,
     name: 'Tarjetas de Credito',
     description: 'Tarjeta de consumo bajo la modalidad de credito',

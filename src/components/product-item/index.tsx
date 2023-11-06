@@ -1,8 +1,8 @@
-import { Product } from '@/models/product-model';
+import { IProduct } from '@/models/product-model';
 import styles from './product-item.module.css';
 import Image from 'next/image';
 
-export default function ProductItem({ logo, name, description, date_release, date_revision }: Product) {
+export default function ProductItem({ logo, name, description, date_release, date_revision }: IProduct) {
   return (
     <tr className={styles.row}>
       <td className={styles.col}>

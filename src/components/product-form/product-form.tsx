@@ -1,26 +1,37 @@
 'use client';
 import { FormEvent } from "react";
 import style from './product-form.module.css';
+import { createProduct, updateProduct } from "@/services/products-service";
+import { IProduct } from "@/models/product-model";
 
-interface IFormValues {
+interface IFormValues extends IProduct {
   [key: string]: string
 }
 
 export function ProductForm ({ action }: { action: 'create' | 'update' }) {
-  const onSubmit = (ev: FormEvent) => {
+  const onSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
     const form = ev.currentTarget as HTMLFormElement;
     console.log(form);
     const formData = new FormData(form);
-    console.log(formData.entries());
-    let product: IFormValues = {};
+    let product: IFormValues = {
+      id: '',
+      name: '',
+      description: '',
+      logo: '',
+      date_release: '',
+      date_revision: ''
+    };
     formData.forEach((value: FormDataEntryValue, key) => {
       product[key] = value.toString();
-    })
-    console.log(product);
-  }
-  const cleanForm = () => {
-    return 0;
+    });
+    product.date_release = `${product.date_release}T00:00:00.000+00:00`;
+    product.date_revision = `${product.date_revision}T00:00:00.000+00:00`;
+    if (action === 'create') {
+      const productResponse = await createProduct(product);
+      return;
+    }
+    const productResponse = await updateProduct(product);
   }
   return <form className={style.form} onSubmit={(event: FormEvent)=>onSubmit(event)}>
     <div className={style.header}>
@@ -59,7 +70,7 @@ export function ProductForm ({ action }: { action: 'create' | 'update' }) {
       </div>
     </div>
     <div className={style.bottom}>
-      <button type="reset" onClick={()=>cleanForm}>Reiniciar</button>
+      <button type="reset">Reiniciar</button>
       <button type="submit">Enviar</button>
     </div>
   </form>

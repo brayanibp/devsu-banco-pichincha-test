@@ -12,8 +12,8 @@ export default function ProductItem({ logo, name, description, date_release, dat
       </td>
       <td className={styles.col}>{name}</td>
       <td className={styles.col}>{description}</td>
-      <td className={styles.col}>{date_release}</td>
-      <td className={styles.col}>{date_revision}</td>
+      <td className={styles.col}>{date_release.split('T')[0]}</td>
+      <td className={styles.col}>{date_revision.split('T')[0]}</td>
       <td className={styles.col}><Image src="/assets/menu.png" alt="menu" width={24} height={24} /></td>
     </tr>
   );

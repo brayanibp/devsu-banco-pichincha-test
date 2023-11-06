@@ -11,39 +11,33 @@ async function fetchProducts(): Promise<IProduct[]> {
   return products;
 }
 
-async function createProduct(): Promise<IProduct[]> {
-  const productId = crypto.randomUUID();
-  const releaseDate = new Date().toISOString();
-  const newProduct: IProduct = {
-    id: productId,
-    name: 'Tarjetas de Credito',
-    description: 'Tarjeta de consumo bajo la modalidad de credito',
-    date_release: releaseDate,
-    date_revision: releaseDate,
-    logo: "https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg"
-  };
-  const formData = new FormData();
-  formData.set('name', newProduct.name || '');
-  formData.set('description', newProduct.description || '');
-
+async function createProduct(productData: IProduct): Promise<IProduct> {
   try {
     const result = await fetch(`${API_URL}/bp/products`, {
       method: 'POST',
       headers: {
-        authorId: `${AUTHOR_ID}`,
-        'content-type': 'application/json'
+        "authorId": `${AUTHOR_ID}`,
+        "content-type": "application/json"
       },
-      body: formData
+      body: JSON.stringify(productData)
     });
-    const products = await result.json();
-    return products;
+    if (result.status !== 200) throw await result.text();
+    const product = await result.json();
+    return product;
   } catch (error) {
     console.error(error);
-    return [];
+    return {
+      id: '',
+      name: '',
+      description: '',
+      logo: '',
+      date_release: '',
+      date_revision: ''
+    };
   }
 }
 
-async function updateProduct() {
+async function updateProduct(product: IProduct) {
 
 }
 

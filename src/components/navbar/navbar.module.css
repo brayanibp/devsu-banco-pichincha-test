@@ -4,7 +4,7 @@
   justify-content: center;
   background: #ffffff;
 }
-.nav div {
+.nav a {
   display: flex;
   flex-wrap: nowrap;
   color: #17275A;
@@ -12,6 +12,7 @@
   font-size: 1.7em;
   align-items: center;
   justify-content: center;
+  text-decoration: none;
 }
 .nav .box {
   background: #F9DE4B;

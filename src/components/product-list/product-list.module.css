@@ -29,3 +29,24 @@
   font-size: 1.2em;
   padding: 10px 10px;
 }
+
+.add_button {
+  background: #F9DE4B;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 30px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #17275A;
+  font-weight: bold;
+  font-size: 1em;
+}
+
+.list_footer {
+  margin: 40px 0; 
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}

@@ -8,7 +8,6 @@ async function fetchProducts(): Promise<Product[]> {
     }
   });
   const products = await result.json();
-  console.log(products);
   return products;
 }
 
@@ -24,21 +23,24 @@ async function createProduct(): Promise<Product[]> {
     logo: "https://www.visa.com.ec/dam/VCOM/regional/lac/SPA/Default/Pay%20With%20Visa/Tarjetas/visa-signature-400x225.jpg"
   };
   const formData = new FormData();
-
   formData.set('name', newProduct.name || '');
   formData.set('description', newProduct.description || '');
 
-  const result = await fetch(`${API_URL}/bp/products`, {
-    method: 'POST',
-    headers: {
-      authorId: `${AUTHOR_ID}`,
-      'content-type': 'application/json'
-    },
-    body: formData
-  });
-  const products = await result.json();
-  console.log(products);
-  return products;
+  try {
+    const result = await fetch(`${API_URL}/bp/products`, {
+      method: 'POST',
+      headers: {
+        authorId: `${AUTHOR_ID}`,
+        'content-type': 'application/json'
+      },
+      body: formData
+    });
+    const products = await result.json();
+    return products;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 async function updateProduct() {

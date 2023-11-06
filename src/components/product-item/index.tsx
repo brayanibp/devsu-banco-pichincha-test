@@ -3,7 +3,6 @@ import styles from './product-item.module.css';
 import Image from 'next/image';
 
 export default function ProductItem({ logo, name, description, date_release, date_revision }: Product) {
-  console.log(logo);
   return (
     <tr className={styles.row}>
       <td className={styles.col}>

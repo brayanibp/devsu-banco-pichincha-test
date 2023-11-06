@@ -6,6 +6,7 @@ import { EmptyView } from '../empty-view';
 import { ProductListSkeleton } from './product-list-skeleton';
 import RecordsLimit from '../records-limit';
 import { ChangeEvent, useState } from "react";
+import Link from 'next/link';
 
 export default function ProductList() {
   const { productList, records, applyFilter } = useProductList();
@@ -21,8 +22,9 @@ export default function ProductList() {
 
   return (
     <>
-      <div style={{ marginBottom: 30, width: '100%', maxWidth: 1280 }}>
+      <div style={{ marginBottom: 30, width: '100%', maxWidth: 1280, justifyContent: 'space-between', display: 'flex' }}>
         <input className={style.search} type="text" onChange={(event) => handleTyping(event)} placeholder="Search..." />
+        <Link className={style.add_button} href={'/create'}>Agregar</Link>
       </div>
       {
         !productList ? <ProductListSkeleton />
@@ -44,7 +46,7 @@ export default function ProductList() {
               </tbody>
             </table>
             {productList && !productsCards?.length && (<EmptyView />) }
-            <div style={{ padding: '40px 0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div className={style.list_footer}>
               <strong>{records} Resultados</strong>
               <RecordsLimit></RecordsLimit>
             </div>

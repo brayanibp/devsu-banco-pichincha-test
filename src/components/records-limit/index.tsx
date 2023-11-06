@@ -1,4 +1,6 @@
+'use client';
 import { useState } from "react";
+import style from "./records-limit.module.css";
 
 export default function RecordsLimit() {
   const [limit, setLimit] = useState(5);
@@ -7,12 +9,14 @@ export default function RecordsLimit() {
     const handleClick = (value: number) => {
       setLimit(value);
     }
-    return <li key={index} onClick={()=>handleClick(item)}>{item}</li>
+    return <li key={index} className={style.option} onClick={()=>handleClick(item)}>{item}</li>
   })
   return (
-    <ul>
-      <li>{limit}</li>
-      {options}
+    <ul className={style.box}>
+      <li className={style.selected}>{limit} <span className={style.arrow}></span></li>
+      <div className={style.options}>
+        {options}
+      </div>
     </ul>
   );
 }

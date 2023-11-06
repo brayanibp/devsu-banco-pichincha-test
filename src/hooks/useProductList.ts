@@ -1,3 +1,4 @@
+'use client';
 import { Product } from '@/models/product-model';
 import { fetchProducts } from '@/services/products-service';
 import { useEffect, useState } from 'react';

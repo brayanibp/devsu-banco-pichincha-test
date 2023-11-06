@@ -1,11 +1,5 @@
-'use client';
-import styles from './page.module.css';
-import ProductList from '@/components/product-list';
+import { permanentRedirect } from "next/navigation";
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <ProductList />
-    </main>
-  );
+  return permanentRedirect('/products');
 }

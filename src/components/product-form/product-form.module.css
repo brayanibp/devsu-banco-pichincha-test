@@ -40,19 +40,35 @@
   margin: 10px 20px;
 }
 
+.error {
+  color: red;
+  border-color: red;
+}
+
 .col label {
   font-weight: bold;
-  margin: 5px 10px;
+  margin: 5px;
 }
 
 .col input {
   border: 1px solid #B9B9BB;
-  border-radius: 10px;
+  border-radius: 5px;
   height: 40px;
   width: 240px;
   margin: 5px;
   padding: 0 15px;
   font-size: 1em;
+}
+
+.error input {
+  border-color: red;
+}
+
+.col span {
+  margin: 5px;
+  width: 270px;
+  font-size: 0.9em;
+  height: 35px;
 }
 
 .bottom {

@@ -9,8 +9,27 @@ export interface IFormError {
   value: string;
 }
 
+interface IDynamicInputError {
+  [key: string]: string;
+}
+
 export interface IFormStatus {
   isLoading: boolean;
-  hasError: boolean;
-  errors: IFormError[]
+  errors: IDynamicInputError[];
+  errorsMap: {
+    [key: string]: string;
+  }
+}
+
+export interface IFormConstraint {
+  required: boolean;
+  type: 'string' | 'date';
+  min?: number;
+  max?: number;
+  since?: string[]
+  [key: string]: string | string[] | number | boolean | undefined;
+}
+
+export interface IFormConstraints {
+  [key: string]: IFormConstraint
 }

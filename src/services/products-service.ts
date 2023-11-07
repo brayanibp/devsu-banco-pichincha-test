@@ -35,7 +35,7 @@ async function updateProduct(productData: IProduct) {
     const result = await fetch(`${API_URL}/bp/products`, {
       method: 'PUT',
       headers: {
-        // "authorId": `${AUTHOR_ID}`,
+        "authorId": `${AUTHOR_ID}`,
         "content-type": "application/json"
       },
       body: JSON.stringify(productData)

@@ -1,38 +1,19 @@
 'use client';
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
+import { ChangeEvent, FormEvent, useContext } from "react";
 import style from './product-form.module.css';
 import { createProduct, updateProduct } from "@/services/products-service";
 import { IProduct } from "@/models/product-model";
 import { TDialog } from "@/models/dialog-model";
-import { EMPTY_FORM, ERROR_DIALOG, SUCCESS_DIALOG } from "@/consts/consts";
+import { EMPTY_FORM, ERROR_DIALOG, FORM_CONSTRAINTS, SUCCESS_DIALOG } from "@/consts/consts";
 import { useRouter } from "next/navigation";
 import { DialogDispatchContext } from "@/store/contexts/DialogContext";
-import { IFormError, IFormStatus, IFormValues } from "@/models/form-models";
+import { IFormValues } from "@/models/form-models";
+import useFormValidators from "@/hooks/useFormValidators";
 
 export function ProductForm ({ title, action, product }: { title: string, action: 'create' | 'update', product?: IProduct }) {
   const router = useRouter();
   const { showDialog } = useContext(DialogDispatchContext);
-  const [status, setStatus] = useState<IFormStatus>({
-    isLoading: false,
-    hasError: false,
-    errors: []
-  });
-  function validateForm(key: string, value: string) {
-    const error: IFormError = {
-      key: 'id',
-      value: 'ID no válido'
-    };
-    setStatus((prev: IFormStatus) => {
-      return {
-        ...prev,
-        hasError: true,
-        errors: [
-          ...prev.errors,
-          error
-        ]
-      }
-    });
-  }
+  const { formStatus, validateForm, validateInput } = useFormValidators();
 
   const successDialog: TDialog = {
     ...SUCCESS_DIALOG,
@@ -49,17 +30,22 @@ export function ProductForm ({ title, action, product }: { title: string, action
     formData.forEach((value: FormDataEntryValue, key) => {
       productForm[key] = value.toString();
     });
-    productForm.date_release = `${productForm.date_release}T00:00:00.000+00:00`;
-    productForm.date_revision = `${getNewRevisionDate(productForm.date_release)}T00:00:00.000+00:00`;
+    const fallbackDate = new Date();
+    fallbackDate.setDate(fallbackDate.getDate() - 1);
+    const fallbackDateValue = fallbackDate.toISOString().split('T')[0];
+    productForm.date_release = `${productForm.date_release || fallbackDateValue }T00:00:00.000+00:00`;
+    productForm.date_revision = `${getNewRevisionDate(productForm.date_release || fallbackDateValue)}T00:00:00.000+00:00`;
     try {
-      if (action === 'create') {
+      if (action === 'create' && validateForm(productForm)) {
         const productResponse = await createProduct(productForm);
         showDialog({ ...successDialog, description: 'El producto se ha creado correctamente' });
         return;
       }
       productForm.id = product?.id || '';
-      const productResponse = await updateProduct(productForm);
-      showDialog({ ...successDialog, description: 'El producto se ha actualizado correctamente' });
+      if (validateForm(productForm)) {
+        const productResponse = await updateProduct(productForm);
+        showDialog({ ...successDialog, description: 'El producto se ha actualizado correctamente' });
+      }
     } catch (error) {
       showDialog({ ...ERROR_DIALOG, description: JSON.stringify(error) });
     }
@@ -67,15 +53,27 @@ export function ProductForm ({ title, action, product }: { title: string, action
 
   function getNewRevisionDate(dateString: string) {
     const [year, month, day] = dateString.split('-').map(val => parseInt(val));
-    const millisecondsDate = new Date(year+1, month - 1, day);
-    const [rYear, rMonth, rDay] = millisecondsDate.toISOString().split('T')[0].split('-');
+    const revisionDate = new Date(year+1, month - 1, day);
+    const [rYear, rMonth, rDay] = revisionDate.toISOString().split('T')[0].split('-');
     return `${+rYear}-${rMonth}-${rDay}`;
   }
 
   function handleDateSelection(event: ChangeEvent<HTMLInputElement>) {
-    const dateString = event.currentTarget.value;
+    const target = event.currentTarget;
+    const key = target.getAttribute('name')!;
+    const value = target.value;
+    const constraints = FORM_CONSTRAINTS[key];
+    validateInput(key, value, constraints);
     const $releaseDate = document.querySelector('#date_revision') as HTMLInputElement;
-    $releaseDate.value = getNewRevisionDate(dateString);
+    $releaseDate.value = getNewRevisionDate(value);
+  }
+
+  function handleTyping(event: ChangeEvent<HTMLInputElement>) {
+    const target = event.currentTarget;
+    const key = target.getAttribute('name')!;
+    const value = target.value;
+    const constraints = FORM_CONSTRAINTS[key];
+    validateInput(key, value, constraints);
   }
 
   return <form className={style.form} onSubmit={(event: FormEvent)=>onSubmit(event)}>
@@ -86,33 +84,39 @@ export function ProductForm ({ title, action, product }: { title: string, action
     </div>
     <div className={style.body}>
       <div className={style.row}>
-        <div className={style.col}>
+        <div className={`${style.col} ${formStatus.errorsMap['id'] ? style.error : ''}`}>
           <label htmlFor="id">ID</label>
-          <input type="text" name="id" id="id" defaultValue={product?.id} disabled={action==='update'} />
+          <input onChange={handleTyping} type="text" name="id" id="id" defaultValue={product?.id} disabled={action==='update'} />
+          <span>{formStatus.errorsMap['id']}</span>
         </div>
-        <div className={style.col}>
+        <div className={`${style.col} ${formStatus.errorsMap['name'] ? style.error : ''}`}>
           <label htmlFor="name">Nombre</label>
-          <input type="text" name="name" id="name" defaultValue={product?.name} />
+          <input onChange={handleTyping} type="text" name="name" id="name" defaultValue={product?.name} />
+          <span>{formStatus.errorsMap['name']}</span>
         </div>
       </div>
       <div className={style.row}>
-        <div className={style.col}>
+        <div className={`${style.col} ${formStatus.errorsMap['description'] ? style.error : ''}`}>
           <label htmlFor="description">Descripción</label>
-          <input type="text" name="description" id="description" defaultValue={product?.description} />
+          <input onChange={handleTyping} type="text" name="description" id="description" defaultValue={product?.description} />
+          <span>{formStatus.errorsMap['description']}</span>
         </div>
-        <div className={style.col}>
+        <div className={`${style.col} ${formStatus.errorsMap['logo'] ? style.error : ''}`}>
           <label htmlFor="logo">Logo</label>
-          <input type="text" name="logo" id="logo" defaultValue={product?.logo} />
+          <input onChange={handleTyping} type="text" name="logo" id="logo" defaultValue={product?.logo} />
+          <span>{formStatus.errorsMap['logo']}</span>
         </div>
       </div>
       <div className={style.row}>
-        <div className={style.col}>
+        <div className={`${style.col} ${formStatus.errorsMap['date_release'] ? style.error : ''}`}>
           <label htmlFor="date_release">Fecha Liberación</label>
           <input onChange={(event)=>handleDateSelection(event)} type="date" name="date_release" id="date_release" defaultValue={product?.date_release.split('T')[0]} />
+          <span>{formStatus.errorsMap['date_release']}</span>
         </div>
-        <div className={style.col}>
+        <div className={`${style.col} ${formStatus.errorsMap['date_revision'] ? style.error : ''}`}>
           <label htmlFor="date_revision">Fecha Revisión</label>
           <input type="date" name="date_revision" id="date_revision" defaultValue={product?.date_revision.split('T')[0]} disabled />
+          <span>{formStatus.errorsMap['date_revision']}</span>
         </div>
       </div>
     </div>

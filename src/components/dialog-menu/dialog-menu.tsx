@@ -8,10 +8,7 @@ export default function DialogMenu({ title, description, type, action }: TDialog
   const dialog = useContext(DialogContext);
   const { hideDialog } = useContext(DialogDispatchContext);
   const closeDialog = () => {
-    console.log('closing dialog', dialog);
     hideDialog();
-    const dialogComponent = document.querySelector('dialog') as HTMLDialogElement;
-    dialogComponent.close();
   }
   return (
     <>

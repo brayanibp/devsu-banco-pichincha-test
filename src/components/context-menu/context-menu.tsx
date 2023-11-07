@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useContext, useEffect, useState } from 'react';
 import { DialogDispatchContext } from '@/store/contexts/DialogContext';
 import { TDialog } from '@/models/dialog-model';
+import { deleteProduct } from '@/services/products-service';
+import { SUCCESS_DIALOG } from '@/consts/consts';
 
 export default function ContextMenu({ product, status, toggleContextMenu }: { product: IProduct, status: 'open' | 'closed', toggleContextMenu: Function }) {
   const router = useRouter();
@@ -15,8 +17,13 @@ export default function ContextMenu({ product, status, toggleContextMenu }: { pr
     status: 'open',
     description: '',
     type: 'confirm',
-    action: () => {
-      console.log('Eliminando producto');
+    action: async () => {
+      await deleteProduct(product);
+      showDialog({ 
+        ...SUCCESS_DIALOG,
+        description: 'El producto se ha eliminado correctamente'
+      });
+      return;
     }
   }
   

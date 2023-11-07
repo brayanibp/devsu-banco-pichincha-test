@@ -1,18 +1,29 @@
 'use client';
-import { ChangeEvent, FormEvent } from "react";
+import { ChangeEvent, FormEvent, useContext } from "react";
 import style from './product-form.module.css';
 import { createProduct, updateProduct } from "@/services/products-service";
 import { IProduct } from "@/models/product-model";
+import { TDialog } from "@/models/dialog-model";
+import { ERROR_DIALOG, SUCCESS_DIALOG } from "@/consts/consts";
+import { useRouter } from "next/navigation";
+import { DialogDispatchContext } from "@/store/contexts/DialogContext";
 
 interface IFormValues extends IProduct {
   [key: string]: string
 }
 
 export function ProductForm ({ title, action, product }: { title: string, action: 'create' | 'update', product?: IProduct }) {
+  const router = useRouter();
+  const { showDialog } = useContext(DialogDispatchContext);
+  const successDialog: TDialog = {
+    ...SUCCESS_DIALOG,
+    action: () => {
+      router.push(`/products`);
+    }
+  }
   const onSubmit = async (ev: FormEvent) => {
     ev.preventDefault();
     const form = ev.currentTarget as HTMLFormElement;
-    console.log(form);
     const formData = new FormData(form);
     let productForm: IFormValues = {
       id: '',
@@ -27,12 +38,18 @@ export function ProductForm ({ title, action, product }: { title: string, action
     });
     productForm.date_release = `${productForm.date_release}T00:00:00.000+00:00`;
     productForm.date_revision = `${getNewRevisionDate(productForm.date_release)}T00:00:00.000+00:00`;
-    if (action === 'create') {
-      const productResponse = await createProduct(productForm);
-      return;
+    try {
+      if (action === 'create') {
+        const productResponse = await createProduct(productForm);
+        showDialog({ ...successDialog, description: 'El producto se ha creado correctamente' });
+        return;
+      }
+      productForm.id = product?.id || '';
+      const productResponse = await updateProduct(productForm);
+      showDialog({ ...successDialog, description: 'El producto se ha actualizado correctamente' });
+    } catch (error) {
+      showDialog({ ...ERROR_DIALOG, description: JSON.stringify(error) });
     }
-    productForm.id = product?.id || '';
-    const productResponse = await updateProduct(productForm);
   }
 
   const getNewRevisionDate = (dateString: string) => {

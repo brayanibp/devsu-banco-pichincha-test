@@ -26,14 +26,7 @@ async function createProduct(productData: IProduct): Promise<IProduct> {
     return product;
   } catch (error) {
     console.error(error);
-    return {
-      id: '',
-      name: '',
-      description: '',
-      logo: '',
-      date_release: '',
-      date_revision: ''
-    };
+    throw error;
   }
 }
 
@@ -42,7 +35,7 @@ async function updateProduct(productData: IProduct) {
     const result = await fetch(`${API_URL}/bp/products`, {
       method: 'PUT',
       headers: {
-        "authorId": `${AUTHOR_ID}`,
+        // "authorId": `${AUTHOR_ID}`,
         "content-type": "application/json"
       },
       body: JSON.stringify(productData)
@@ -52,14 +45,7 @@ async function updateProduct(productData: IProduct) {
     return product;
   } catch (error) {
     console.error(error);
-    return {
-      id: '',
-      name: '',
-      description: '',
-      logo: '',
-      date_release: '',
-      date_revision: ''
-    };
+    throw error;
   }
 }
 
@@ -73,18 +59,11 @@ async function deleteProduct(productData: IProduct) {
       }
     });
     if (result.status !== 200) throw await result.text();
-    const product = await result.json();
-    return product;
+    const message = await result.text();
+    return message;
   } catch (error) {
     console.error(error);
-    return {
-      id: '',
-      name: '',
-      description: '',
-      logo: '',
-      date_release: '',
-      date_revision: ''
-    };
+    throw error;
   }
 }
 

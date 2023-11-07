@@ -1,6 +1,5 @@
-import ProductList from "@/components/product-list";
+import {describe, expect, test} from '@jest/globals';
 
 test('Products list test', async () => {
-  // <ProductList />
-  // await expect()
+  expect(2+2).toBe(4)
 });

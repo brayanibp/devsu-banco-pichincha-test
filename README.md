@@ -1,36 +1,39 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+First, install the dependencies by running:
+
+```bash
+npm i
+```
+
+After installing the dependencies run the development server by using:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The will be shown the products list page. Where you will see a table.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+![Alt text](./docs/products.png)
 
-## Learn More
+In this page you also will have and add product button, a contextual menu by product, a search bar, a pagination, and a records limitators
 
-To learn more about Next.js, take a look at the following resources:
+![Alt text](./docs/context-menu.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This is how create form will look:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![Alt text](./docs/create-form.png)
 
-## Deploy on Vercel
+This is how will look the forms constraints:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![Alt text](./docs/constraints.png)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The produt ID will have an special validation through databases, and every input has custom constraints:
+
+![Alt text](./docs/custom-constraints.png)
+
+If there is something that doesn't exits in your search you will notice it:
+
+![Alt text](./docs/empty-search.png)

@@ -17,19 +17,35 @@ describe('Create Products Page', () => {
     const header = screen.getByRole('heading');
     expect(header.innerHTML).toBe('Formulario de Registro');
   });
-  it('Should Clean the form with reset button', async () => {
+  it('Field Name should display an error if value characthers are major than 100', async () => {
     render(<CreateProduct></CreateProduct>);
     const idInput = screen.getByRole('textbox', {
-      name: 'ID'
+      name: 'Nombre'
+    });
+    const text = Array(101).fill('a').join('');
+    await waitFor(async ()=> fireEvent.change(idInput, { target: { value: text } }));
+    const error = screen.getByText('¡Este campo tiene un máximo de 100 caracteres!');
+    expect(error.innerHTML).toBe('¡Este campo tiene un máximo de 100 caracteres!');
+  });
+  it('Field name should display an error if value characthers are minor than 5', async () => {
+    render(<CreateProduct></CreateProduct>);
+    const idInput = screen.getByRole('textbox', {
+      name: 'Nombre'
+    });
+    await waitFor(async ()=> fireEvent.change(idInput, { target: { value: 'test' } }));
+    const error = screen.getByText('¡Este campo requiere mínimo de 5 caracteres!');
+    expect(error.innerHTML).toBe('¡Este campo requiere mínimo de 5 caracteres!');
+  });
+  it('Should clean the form with reset button', async () => {
+    render(<CreateProduct></CreateProduct>);
+    const idInput = screen.getByRole('textbox', {
+      name: 'Nombre'
     });
     const resetButtom = screen.getByRole('button', {
       name: 'Reiniciar'
     });
-
-    await waitFor(async ()=> await fireEvent.change(idInput, { target: { value: 'trj-cred' } }));
-    console.log(idInput.innerHTML);
-    const newInput = screen.getByText('trj-cred');
+    await waitFor(async ()=> fireEvent.change(idInput, { target: { value: 'test name' } }));
     fireEvent.click(resetButtom);
-    expect(newInput).toContain('');
+    expect(idInput.getAttribute('value')).toBe('');
   });
-})
+});

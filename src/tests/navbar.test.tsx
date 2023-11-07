@@ -4,13 +4,11 @@ import { describe, expect, it } from '@jest/globals';
 import { Navbar } from '@/components/navbar/navbar';
 
 describe('Navbar', () => {
-  it('It should have a link directed to /products', () => {
+  it('It should have a link for redirect to /products', () => {
     render(<Navbar></Navbar>);
-
     const header = screen.getByRole('link', {
       name: "BANCO PICHINCHA"
     });
-
     expect(
       String(header.getAttribute('href'))
     )

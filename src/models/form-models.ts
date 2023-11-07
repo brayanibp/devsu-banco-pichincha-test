@@ -27,7 +27,8 @@ export interface IFormConstraint {
   min?: number;
   max?: number;
   since?: string[]
-  [key: string]: string | string[] | number | boolean | undefined;
+  valid?: (boolean | string)[];
+  [key: string]: string | string[] | number | boolean | (boolean | string)[] |undefined;
 }
 
 export interface IFormConstraints {

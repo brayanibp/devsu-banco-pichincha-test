@@ -1,6 +1,7 @@
 import { EMPTY_FORM, ERROR_DIALOG, FORM_CONSTRAINTS, FORM_ERROR_MESSAGES, SUCCESS_DIALOG } from "@/consts/consts";
 import { IFormConstraint, IFormStatus } from "@/models/form-models";
 import { IProduct } from "@/models/product-model";
+import { validateProductId } from "@/services/products-service";
 import { useState } from "react";
 
 export default function useFormValidators() {
@@ -10,12 +11,17 @@ export default function useFormValidators() {
     errorsMap: EMPTY_FORM
   });
 
-  function validateInput(key: string, value: string, constraints: IFormConstraint) {
+  async function validateInput(key: string, value: string, constraints: IFormConstraint) {
+    let isValid = false;
+    if (key === 'id') {
+      isValid = await validateProductId(value);
+    }
     const errors: { [key: string]: boolean } = {
       required: constraints.required && !value,
       min: false,
       max: false,
-      since: false
+      since: false,
+      valid: Boolean(constraints.valid) && !isValid
     }
     if (constraints.type === 'string') {
       errors.min = Boolean(constraints.min && constraints.min > 0 && value.length < constraints.min);
@@ -29,12 +35,18 @@ export default function useFormValidators() {
       errors.since = valueDate < sinceDate;
     }
     const errorsMessages = Object.entries(errors).map(([ckey, value]) => {
-      return { key: ckey, value: value ? FORM_ERROR_MESSAGES[ckey].replace('{}', constraints[ckey]!.toString().replace(/,/g, '-')) : '' };
+      const param = (Boolean(constraints) && Boolean(constraints[ckey]) && constraints[ckey]?.toString().length === 7 ? 'ID' : constraints[ckey]?.toString().replace(/,/g, '-')) || '';
+      const message = FORM_ERROR_MESSAGES[ckey].replace('{}', param);
+      return {
+        key: ckey, 
+        value: value ? message : '' 
+      };
     });
     const totalErrors = errorsMessages.reduce((errors: { key: string, value: string }[], error) => {
       if (error.value) return [...errors, error];
       return [...errors];
     }, []);
+    console.log(totalErrors);
     setStatus((prev: IFormStatus) => {
       return {
         ...prev,
@@ -51,12 +63,12 @@ export default function useFormValidators() {
     return totalErrors;
   }
 
-  function validateForm(productForm: IProduct): boolean {
+  async function validateForm(productForm: IProduct): Promise<boolean> {
     const formErrors = Object.entries(productForm).map(([key, value]) => {
       const constraints = FORM_CONSTRAINTS[key];
       return validateInput(key, value, constraints);
     });
-    return !formErrors.some((errorsGroup) => {
+    return !(await Promise.all(formErrors)).some((errorsGroup) => {
       return errorsGroup.length > 0;
     });
   }

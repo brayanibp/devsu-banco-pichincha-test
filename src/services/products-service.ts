@@ -67,9 +67,29 @@ async function deleteProduct(productData: IProduct) {
   }
 }
 
+async function validateProductId(productId: string) {
+  try {
+    const result = await fetch(`${API_URL}/bp/products/verification?id=${productId}`, {
+      method: 'GET',
+      headers: {
+        "authorId": `${AUTHOR_ID}`,
+        "content-type": "application/json"
+      }
+    });
+    if (result.status !== 200) throw await result.text();
+    const status = await result.text();
+    const isValid = Boolean(status === "true");
+    return isValid;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export {
   fetchProducts,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  validateProductId
 }

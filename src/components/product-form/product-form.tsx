@@ -36,13 +36,13 @@ export function ProductForm ({ title, action, product }: { title: string, action
     productForm.date_release = `${productForm.date_release || fallbackDateValue }T00:00:00.000+00:00`;
     productForm.date_revision = `${getNewRevisionDate(productForm.date_release || fallbackDateValue)}T00:00:00.000+00:00`;
     try {
-      if (action === 'create' && validateForm(productForm)) {
+      if (action === 'create' && await validateForm(productForm)) {
         const productResponse = await createProduct(productForm);
         showDialog({ ...successDialog, description: 'El producto se ha creado correctamente' });
         return;
       }
       productForm.id = product?.id || '';
-      if (validateForm(productForm)) {
+      if (await validateForm(productForm)) {
         const productResponse = await updateProduct(productForm);
         showDialog({ ...successDialog, description: 'El producto se ha actualizado correctamente' });
       }

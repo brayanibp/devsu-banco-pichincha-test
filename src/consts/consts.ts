@@ -22,7 +22,8 @@ export const FORM_CONSTRAINTS: IFormConstraints = {
     required: true,
     min: 3,
     max: 10,
-    type: 'string'
+    type: 'string',
+    valid: [true, 'ID']
   },
   name: {
     required: true,
@@ -60,7 +61,8 @@ export const FORM_ERROR_MESSAGES: {
   required: '¡Este campo es requerido!',
   min: '¡Este campo requiere mínimo de {} caracteres!',
   max: '¡Este campo tiene un máximo de {} caracteres!',
-  since: '¡La fecha debe ser mayor o igual a {}!'
+  since: '¡La fecha debe ser mayor o igual a {}!',
+  valid: '¡{} no valido!'
 }
 
 export const INITIAL_DIALOG: TDialog = { 

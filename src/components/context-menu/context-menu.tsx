@@ -2,9 +2,11 @@ import { IProduct } from '@/models/product-model';
 import style from './context-menu.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import DialogMenu from '../dialog-menu/dialog-menu';
 
 export default function ContextMenu({ product, status, toggleContextMenu }: { product: IProduct, status: 'open' | 'closed', toggleContextMenu: Function }) {
   const router = useRouter();
+  const [dialogStatus, setDialogStatus] = useState<'open' | 'closed'>('closed');
   const [urlParams, setUrlParams] = useState<URLSearchParams>();
   
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function ContextMenu({ product, status, toggleContextMenu }: { pr
             </li>
             <li className={style.option}>
               <button onClick={() => {
-                router.push(`/update/product?${urlParams}`);
+                setDialogStatus('open')
               }}>
                 Eliminar
               </button>

@@ -1,9 +1,8 @@
 'use client';
 import { ProductForm } from "@/components/product-form/product-form";
-import { IProduct } from "@/models/product-model";
 import { useSearchParams } from "next/navigation";
 
-export default function ProductPage({ product }: { product?: IProduct }) {
+export default function ProductPage() {
   const searchParams = useSearchParams();
   const paramObject: any = {};
   searchParams?.forEach((value, key) => {

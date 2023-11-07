@@ -8,14 +8,14 @@ import { ADD_PRODUCT, DELETE_PRODUCT, EDIT_PRODUCT, GET_PRODUCTS, SET_PRODUTS } 
 import { useEffect, useState, ChangeEvent, useReducer } from 'react';
 
 export function useProductList () {
-  // const [products, setProducts] = useState<IProduct[] | null>(null);
   const [products, dispatch] = useReducer(
     productsReducer,
     INITIAL_PRODUCTS_LIST
   );
+  const [filteredList, setFilteredList] = useState<IProduct[] | null>(null);
+  const [searchParam, setSearchParam] = useState<string>('');
 
   function setProducts(seed: IProduct[]) {
-    console.log(seed);
     dispatch({
       type: SET_PRODUTS,
       payload: seed
@@ -36,21 +36,19 @@ export function useProductList () {
     });
   }
 
-  function editProduct(product: IProduct[]) {
+  function editProduct(product: IProduct) {
     dispatch({
       type: EDIT_PRODUCT,
-      payload: product
+      payload: [product]
     });
   }
 
-  function deleteProduct(product: IProduct[]) {
+  function deleteProduct(product: IProduct) {
     dispatch({
       type: DELETE_PRODUCT,
-      payload: product
+      payload: [product]
     })
   }
-  
-  const [filteredList, setFilteredList] = useState<IProduct[] | null>(null);
 
   const cleanText = (text: string) => {
     return text.toLowerCase().trim();
@@ -66,10 +64,10 @@ export function useProductList () {
   const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
     applyFilter(value);
+    setSearchParam(value);
   }
 
   useEffect(() => {
-    console.log('useEffect');
     fetchProducts()
       .then((res) => {
         setProducts(res);
@@ -79,6 +77,13 @@ export function useProductList () {
         alert(error.message);
       });
   }, []);
+
+  useEffect(() => {
+    const filterResult = products?.filter((product: IProduct) => {
+      return cleanText(product.description).includes(cleanText(searchParam)) || cleanText(product.name).includes(cleanText(searchParam));
+    }) || null;
+    setFilteredList(filterResult)
+  }, [products, searchParam]);
 
   return {
     productsList: filteredList,

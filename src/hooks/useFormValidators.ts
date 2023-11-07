@@ -46,7 +46,6 @@ export default function useFormValidators() {
       if (error.value) return [...errors, error];
       return [...errors];
     }, []);
-    console.log(totalErrors);
     setStatus((prev: IFormStatus) => {
       return {
         ...prev,

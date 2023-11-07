@@ -6,10 +6,12 @@ import { DialogDispatchContext } from '@/store/contexts/DialogContext';
 import { TDialog } from '@/models/dialog-model';
 import { deleteProduct } from '@/services/products-service';
 import { SUCCESS_DIALOG } from '@/consts/consts';
+import { ProductsListContext } from '@/store/contexts/ProductsListContext';
 
 export default function ContextMenu({ product, status, toggleContextMenu }: { product: IProduct, status: 'open' | 'closed', toggleContextMenu: Function }) {
   const router = useRouter();
   const { showDialog } = useContext(DialogDispatchContext);
+  const { deleteProduct: deleteProductDispatcher } = useContext(ProductsListContext);
   const [urlParams, setUrlParams] = useState<URLSearchParams>();
 
   const dialog: TDialog = {
@@ -19,6 +21,7 @@ export default function ContextMenu({ product, status, toggleContextMenu }: { pr
     type: 'confirm',
     action: async () => {
       await deleteProduct(product);
+      deleteProductDispatcher(product);
       showDialog({ 
         ...SUCCESS_DIALOG,
         description: 'El producto se ha eliminado correctamente'

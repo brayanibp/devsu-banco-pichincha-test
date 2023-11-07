@@ -1,10 +1,11 @@
 'use client';
 
 import { IPagination } from "@/models/pagination-model";
-import { IProduct } from "@/models/product-model";
-import { useEffect, useState } from "react";
+import { ProductsListContext } from "@/store/contexts/ProductsListContext";
+import { useContext, useEffect, useState } from "react";
 
-export default function usePagination({ productList }: { productList: IProduct[]}) {
+export default function usePagination() {
+  const { productsList } = useContext(ProductsListContext);
   const [hitsPeerPage, setHitsPeerPage] = useState(5);
   const [pagination, setPagination] = useState<IPagination>({
     hitsPeerPage: 5,
@@ -23,10 +24,10 @@ export default function usePagination({ productList }: { productList: IProduct[]
         return {
           ...prev,
           hitsPeerPage: hitsPeerPage,
-          totalRecords: productList?.length || 0,
-          totalPages: Math.ceil((productList?.length || 0) / hitsPeerPage),
+          totalRecords: productsList?.length || 0,
+          totalPages: Math.ceil((productsList?.length || 0) / hitsPeerPage),
           hits: [
-            ...(productList?.slice(0, hitsPeerPage) || [])
+            ...(productsList?.slice(0, hitsPeerPage) || [])
           ],
           page: 1,
           fromIndex: 0
@@ -37,7 +38,7 @@ export default function usePagination({ productList }: { productList: IProduct[]
       // clearing task if useEffect renders again while executing previous task
       clearTimeout(task);
     }
-  }, [productList, hitsPeerPage]);
+  }, [productsList, hitsPeerPage]);
 
   const setPageLimit = (value: number) => {
     setHitsPeerPage(value);
@@ -50,7 +51,7 @@ export default function usePagination({ productList }: { productList: IProduct[]
         ...prev,
         page: pagination.page - 1,
         fromIndex: pagination.fromIndex - pagination.hitsPeerPage,
-        hits: productList.slice(pagination.fromIndex - pagination.hitsPeerPage, hitsPeerPage)
+        hits: productsList?.slice(pagination.fromIndex - pagination.hitsPeerPage, hitsPeerPage) || []
       }
     });
   }
@@ -62,7 +63,7 @@ export default function usePagination({ productList }: { productList: IProduct[]
         ...prev,
         page: pagination.page + 1,
         fromIndex: pagination.fromIndex + pagination.hitsPeerPage,
-        hits: [...productList.slice(pagination.fromIndex + pagination.hitsPeerPage, hitsPeerPage * (pagination.page + 1))]
+        hits: [...productsList?.slice(pagination.fromIndex + pagination.hitsPeerPage, hitsPeerPage * (pagination.page + 1)) || []]
       }
     });
   }

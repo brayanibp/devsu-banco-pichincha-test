@@ -1,11 +1,55 @@
 'use client';
 
+import { INITIAL_PRODUCTS_LIST } from '@/consts/consts';
 import { IProduct } from '@/models/product-model';
 import { fetchProducts } from '@/services/products-service';
-import { useEffect, useState, ChangeEvent } from 'react';
+import productsReducer from '@/store/reducers/productsReducer';
+import { ADD_PRODUCT, DELETE_PRODUCT, EDIT_PRODUCT, GET_PRODUCTS, SET_PRODUTS } from '@/store/types/productsActions';
+import { useEffect, useState, ChangeEvent, useReducer } from 'react';
 
 export function useProductList () {
-  const [products, setProducts] = useState<IProduct[] | null>(null);
+  // const [products, setProducts] = useState<IProduct[] | null>(null);
+  const [products, dispatch] = useReducer(
+    productsReducer,
+    INITIAL_PRODUCTS_LIST
+  );
+
+  function setProducts(seed: IProduct[]) {
+    console.log(seed);
+    dispatch({
+      type: SET_PRODUTS,
+      payload: seed
+    });
+  }
+
+  function getProducts() {
+    dispatch({
+      type: GET_PRODUCTS,
+      payload: []
+    });
+  }
+
+  function addProduct(product: IProduct[]) {
+    dispatch({
+      type: ADD_PRODUCT,
+      payload: product
+    });
+  }
+
+  function editProduct(product: IProduct[]) {
+    dispatch({
+      type: EDIT_PRODUCT,
+      payload: product
+    });
+  }
+
+  function deleteProduct(product: IProduct[]) {
+    dispatch({
+      type: DELETE_PRODUCT,
+      payload: product
+    })
+  }
+  
   const [filteredList, setFilteredList] = useState<IProduct[] | null>(null);
 
   const cleanText = (text: string) => {
@@ -25,6 +69,7 @@ export function useProductList () {
   }
 
   useEffect(() => {
+    console.log('useEffect');
     fetchProducts()
       .then((res) => {
         setProducts(res);
@@ -34,10 +79,15 @@ export function useProductList () {
         alert(error.message);
       });
   }, []);
+
   return {
-    productList: filteredList,
+    productsList: filteredList,
     records: filteredList?.length || 0,
     applyFilter,
-    handleSearch
+    handleSearch,
+    getProducts,
+    addProduct,
+    editProduct,
+    deleteProduct
   }
 }

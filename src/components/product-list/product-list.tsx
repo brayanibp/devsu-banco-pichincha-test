@@ -1,6 +1,5 @@
 'use client';
 import ProductItem from '@/components/product-item/product-item';
-import { useProductList } from '@/hooks/useProductList';
 import style from './product-list.module.css';
 import { EmptyView } from '../empty-view/empty-view';
 import { ProductListSkeleton } from './product-list-skeleton';
@@ -8,10 +7,12 @@ import RecordsLimit from '../records-limit/records-limit';
 import Link from 'next/link';
 import usePagination from '@/hooks/usePagination';
 import Paginator from '../paginator/paginator';
+import { useContext } from 'react';
+import { ProductsListContext } from '@/store/contexts/ProductsListContext';
 
 export default function ProductList() {
-  const { productList, records, handleSearch } = useProductList();
-  const { pagination, setPageLimit, goBack, goNext } = usePagination({ productList: productList || [] });
+  const { productsList, records, handleSearch } = useContext(ProductsListContext);
+  const { pagination, setPageLimit, goBack, goNext } = usePagination({ productList: productsList || [] });
   
   const productsCards = pagination.hits?.map((item)=>{
     return <ProductItem key={item?.id || 'not-defined'} { ...(item || {}) } />;
@@ -24,7 +25,7 @@ export default function ProductList() {
         <Link className={style.add_button} href={'/create'}>Agregar</Link>
       </div>
       {
-        !productList ? <ProductListSkeleton />
+        !productsList ? <ProductListSkeleton />
         : (
           <div className={style['table-wrapper']}>
             <table className={style.table}>
@@ -39,10 +40,10 @@ export default function ProductList() {
                 </tr>
               </thead>
               <tbody>
-                { productList && productsCards?.length ? productsCards : <tr></tr> }
+                { productsList && productsCards?.length ? productsCards : <tr></tr> }
               </tbody>
             </table>
-            {productList && !productsCards?.length && (<EmptyView />) }
+            {productsList && !productsCards?.length && (<EmptyView />) }
             <div className={style.footer}>
               <div>
                 <strong>{records} Resultados</strong>

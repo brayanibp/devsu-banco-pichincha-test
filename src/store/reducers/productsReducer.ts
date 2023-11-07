@@ -1,18 +1,34 @@
 import { IProduct } from "@/models/product-model";
 import { ADD_PRODUCT, DELETE_PRODUCT, EDIT_PRODUCT, GET_PRODUCTS, SET_PRODUTS } from "../types/productsActions";
 
-export default function productsReducer(products: IProduct[] = [], action: { type: string, payload: any }) {
+export default function productsReducer(products: IProduct[], action: { type: string, payload: IProduct[] }) {
   switch (action.type) {
     case ADD_PRODUCT:
-      break;
+      return [
+        ...products,
+        action.payload[0]
+      ];
     case EDIT_PRODUCT:
-      break;
+      return products.map((product) => {
+        if (product.id === action.payload[0].id) {
+          return {
+            ...action.payload[0]
+          };
+        }
+        return {
+          ...product,
+        };
+      });
     case DELETE_PRODUCT:
-      break;
+      return [...products.filter(product => product.id !== action.payload[0].id)];
     case GET_PRODUCTS:
-      break;
+      return [
+        ...products
+      ];
     case SET_PRODUTS:
-      break;
+      return [
+        ...action.payload
+      ];
     default: 
       return [];
   }

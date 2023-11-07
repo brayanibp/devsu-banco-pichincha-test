@@ -1,38 +1,51 @@
 'use client';
-import { ChangeEvent, FormEvent, useContext } from "react";
+import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import style from './product-form.module.css';
 import { createProduct, updateProduct } from "@/services/products-service";
 import { IProduct } from "@/models/product-model";
 import { TDialog } from "@/models/dialog-model";
-import { ERROR_DIALOG, SUCCESS_DIALOG } from "@/consts/consts";
+import { EMPTY_FORM, ERROR_DIALOG, SUCCESS_DIALOG } from "@/consts/consts";
 import { useRouter } from "next/navigation";
 import { DialogDispatchContext } from "@/store/contexts/DialogContext";
-
-interface IFormValues extends IProduct {
-  [key: string]: string
-}
+import { IFormError, IFormStatus, IFormValues } from "@/models/form-models";
 
 export function ProductForm ({ title, action, product }: { title: string, action: 'create' | 'update', product?: IProduct }) {
   const router = useRouter();
   const { showDialog } = useContext(DialogDispatchContext);
+  const [status, setStatus] = useState<IFormStatus>({
+    isLoading: false,
+    hasError: false,
+    errors: []
+  });
+  function validateForm(key: string, value: string) {
+    const error: IFormError = {
+      key: 'id',
+      value: 'ID no válido'
+    };
+    setStatus((prev: IFormStatus) => {
+      return {
+        ...prev,
+        hasError: true,
+        errors: [
+          ...prev.errors,
+          error
+        ]
+      }
+    });
+  }
+
   const successDialog: TDialog = {
     ...SUCCESS_DIALOG,
     action: () => {
-      router.push(`/products`);
+      router.replace('/products');
     }
   }
-  const onSubmit = async (ev: FormEvent) => {
+
+  async function onSubmit(ev: FormEvent) {
     ev.preventDefault();
     const form = ev.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
-    let productForm: IFormValues = {
-      id: '',
-      name: '',
-      description: '',
-      logo: '',
-      date_release: '',
-      date_revision: ''
-    };
+    let productForm: IFormValues = EMPTY_FORM;
     formData.forEach((value: FormDataEntryValue, key) => {
       productForm[key] = value.toString();
     });
@@ -52,14 +65,14 @@ export function ProductForm ({ title, action, product }: { title: string, action
     }
   }
 
-  const getNewRevisionDate = (dateString: string) => {
+  function getNewRevisionDate(dateString: string) {
     const [year, month, day] = dateString.split('-').map(val => parseInt(val));
     const millisecondsDate = new Date(year+1, month - 1, day);
     const [rYear, rMonth, rDay] = millisecondsDate.toISOString().split('T')[0].split('-');
     return `${+rYear}-${rMonth}-${rDay}`;
   }
 
-  const handleDateSelection = (event: ChangeEvent<HTMLInputElement>) => {
+  function handleDateSelection(event: ChangeEvent<HTMLInputElement>) {
     const dateString = event.currentTarget.value;
     const $releaseDate = document.querySelector('#date_revision') as HTMLInputElement;
     $releaseDate.value = getNewRevisionDate(dateString);

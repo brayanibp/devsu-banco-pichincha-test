@@ -1,48 +1,60 @@
 'use client';
+import { useContext } from 'react';
 import style from './dialog-menu.module.css';
+import { DialogContext, DialogDispatchContext } from '@/store/contexts/DialogContext';
+import { TDialog } from '@/models/dialog-model';
 
-export default function DialogMenu({ title, description, type, payload }: { title: string, description?: string, type?: 'confirm' | 'default', payload?: Function }) {
+export default function DialogMenu({ title, description, type, action }: TDialog) {
+  const dialog = useContext(DialogContext);
+  const { hideDialog } = useContext(DialogDispatchContext);
   const closeDialog = () => {
-    console.log('closing dialog');
+    console.log('closing dialog', dialog);
+    hideDialog();
     const dialogComponent = document.querySelector('dialog') as HTMLDialogElement;
     dialogComponent.close();
   }
   return (
-    <div className={style.container}>
-      <dialog className={style.dialog}>
-        <div className={style.title}>
-          <p>{ title }</p>
-        </div>
-        { 
-          description && (
-            <div className={style.description}>
-              <p>
-                { description }
-              </p>
-            </div>
-          ) 
-        }
-        {
-          type === 'confirm' ? (
-            <div className={style.buttons}>
-              <button onClick={closeDialog} className={style.cancel}>Cancelar</button>
-              <button 
-                onClick={()=>{
-                  if (!!payload) payload();
-                  closeDialog();
-                }}
-                className={style.confirm}
-              >
-                Confirmar
-              </button>
-            </div>
-          ) : (
-            <div className={style.buttons}>
-              <button onClick={closeDialog} className={style.confirm}>Confirmar</button>
-            </div>
-          )
-        }
-      </dialog>
-    </div>
+    <>
+      {
+        dialog.status === 'open' && (
+          <div className={style.container}>
+            <dialog className={style.dialog}>
+              <div className={style.title}>
+                <p>{ title }</p>
+              </div>
+              { 
+                description && (
+                  <div className={style.description}>
+                    <p>
+                      { description }
+                    </p>
+                  </div>
+                ) 
+              }
+              {
+                type === 'confirm' ? (
+                  <div className={style.buttons}>
+                    <button onClick={closeDialog} className={style.cancel}>Cancelar</button>
+                    <button 
+                      onClick={()=>{
+                        if (!!action) action();
+                        closeDialog();
+                      }}
+                      className={style.confirm}
+                    >
+                      Confirmar
+                    </button>
+                  </div>
+                ) : (
+                  <div className={style.buttons}>
+                    <button onClick={closeDialog} className={style.confirm}>Confirmar</button>
+                  </div>
+                )
+              }
+            </dialog>
+          </div>
+        )
+      }
+    </>
   );
 }

@@ -1,0 +1,7 @@
+const SHOW_DIALOG = "SHOW_DIALOG";
+const HIDE_DIALOG = "HIDE_DIALOG";
+
+export {
+  SHOW_DIALOG,
+  HIDE_DIALOG
+}

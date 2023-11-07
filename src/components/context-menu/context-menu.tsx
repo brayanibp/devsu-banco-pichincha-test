@@ -1,13 +1,24 @@
 import { IProduct } from '@/models/product-model';
 import style from './context-menu.module.css';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import DialogMenu from '../dialog-menu/dialog-menu';
+import { useContext, useEffect, useState } from 'react';
+import { DialogDispatchContext } from '@/store/contexts/DialogContext';
+import { TDialog } from '@/models/dialog-model';
 
 export default function ContextMenu({ product, status, toggleContextMenu }: { product: IProduct, status: 'open' | 'closed', toggleContextMenu: Function }) {
   const router = useRouter();
-  const [dialogStatus, setDialogStatus] = useState<'open' | 'closed'>('closed');
+  const { showDialog } = useContext(DialogDispatchContext);
   const [urlParams, setUrlParams] = useState<URLSearchParams>();
+
+  const dialog: TDialog = {
+    title: `¿Estás seguro de eliminar el producto ${product.name}?`,
+    status: 'open',
+    description: '',
+    type: 'confirm',
+    action: () => {
+      console.log('Eliminando producto');
+    }
+  }
   
   useEffect(() => {
     const myUrlParams = new URLSearchParams({
@@ -38,7 +49,7 @@ export default function ContextMenu({ product, status, toggleContextMenu }: { pr
             </li>
             <li className={style.option}>
               <button onClick={() => {
-                setDialogStatus('open')
+                showDialog(dialog);
               }}>
                 Eliminar
               </button>

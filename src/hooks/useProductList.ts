@@ -1,4 +1,5 @@
 'use client';
+
 import { IProduct } from '@/models/product-model';
 import { fetchProducts } from '@/services/products-service';
 import { useEffect, useState, ChangeEvent } from 'react';
